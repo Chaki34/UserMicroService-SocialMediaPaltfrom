@@ -29,6 +29,7 @@ public class UserResponse {
 
     private String bio;
 
+    // This will send the Base64 string back to the UI for display
     private String profileImage;
 
     private Gender gender;

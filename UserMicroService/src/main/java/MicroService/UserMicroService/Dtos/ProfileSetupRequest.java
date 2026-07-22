@@ -28,6 +28,7 @@ public class ProfileSetupRequest {
     @Size(max = 1000)
     private String bio;
 
+    // This will receive the Base64 string from the UI
     private String profileImage;
 
     private Gender gender;

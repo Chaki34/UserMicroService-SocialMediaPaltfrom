@@ -56,8 +56,9 @@ public class User {
     @Column(length = 1000)
     private String bio;
 
-    @Column(name = "profile_image", length = 500)
-    private String profileImage;
+    @Lob
+    @Column(name = "profile_image", columnDefinition = "LONGBLOB") // Use LONGBLOB for MySQL
+    private byte[] profileImage;
 
     @Enumerated(EnumType.STRING)
     @Column(length = 30)

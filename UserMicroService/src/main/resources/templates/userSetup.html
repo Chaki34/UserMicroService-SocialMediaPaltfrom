@@ -4,269 +4,293 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SocialConnect | Account Setup</title>
-    <!-- Fonts & Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
     <style>
         :root {
             --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --secondary: #64748b;
+            --primary-hover: #4f46e5;
+            --secondary: #94a3b8;
             --success: #10b981;
-            --danger: #ef4444;
-            --bg: #f8fafc;
-            --glass: rgba(255, 255, 255, 0.9);
+            --danger: #f43f5e;
+            --dark: #0f172a;
+            --light-bg: #f8fafc;
+            --white: #ffffff;
             --border: #e2e8f0;
+            --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
 
         body {
-            background-color: var(--bg);
-            background-image: radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
-                              radial-gradient(at 100% 100%, rgba(168, 85, 247, 0.15) 0px, transparent 50%);
+            background-color: var(--light-bg);
+            background-image:
+                radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.08) 0, transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(168, 85, 247, 0.08) 0, transparent 40%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 1.5rem;
         }
 
-        /* Container & Transitions */
+        /* Responsive Main Container */
         .app-card {
-            background: var(--glass);
-            backdrop-filter: blur(10px);
+            background: var(--white);
             width: 100%;
-            max-width: 800px;
-            min-height: 500px;
-            border-radius: 28px;
-            border: 1px solid white;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+            max-width: 850px;
+            border-radius: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--white);
             overflow: hidden;
             position: relative;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .step-container { display: none; padding: 40px; animation: fadeIn 0.5s ease-out forwards; }
-        .step-container.active { display: block; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Progress Bar */
-        .progress-track {
-            height: 6px; background: #e2e8f0; width: 100%; position: relative;
-        }
+        .progress-container { height: 6px; background: var(--border); width: 100%; }
         #progress-fill {
             height: 100%; background: linear-gradient(90deg, var(--primary), #a855f7);
-            width: 33%; transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 33%; transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
+        .section { display: none; padding: 3rem; animation: slideUp 0.6s ease-out forwards; }
+        .section.active { display: block; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
         /* Typography */
-        h1 { font-size: 28px; color: #1e293b; font-weight: 700; margin-bottom: 8px; }
-        p.subtitle { color: var(--secondary); margin-bottom: 32px; font-size: 15px; }
+        h1 { font-size: 2rem; color: var(--dark); font-weight: 800; letter-spacing: -0.025em; margin-bottom: 0.5rem; }
+        .subtitle { color: var(--secondary); margin-bottom: 2.5rem; font-size: 1rem; }
 
-        /* Form Styling */
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .full-width { grid-column: span 2; }
+        /* Professional Grid System */
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+        .col-span-2 { grid-column: span 2; }
+        @media (max-width: 640px) { .grid { grid-template-columns: 1fr; } .col-span-2 { grid-column: span 1; } }
 
-        .input-group { margin-bottom: 20px; }
-        label { display: block; font-size: 14px; font-weight: 600; color: #475569; margin-bottom: 8px; }
+        /* Inputs */
+        .field-group { margin-bottom: 1.25rem; }
+        label { display: block; font-size: 0.875rem; font-weight: 600; color: var(--dark); margin-bottom: 0.5rem; }
         input, select, textarea {
-            width: 100%; padding: 12px 16px; border-radius: 12px; border: 1.5px solid var(--border);
-            background: white; font-size: 15px; transition: all 0.2s; outline: none;
+            width: 100%; padding: 0.75rem 1rem; border-radius: 0.85rem; border: 1.5px solid var(--border);
+            background: var(--white); font-size: 0.95rem; transition: all 0.2s; outline: none;
         }
         input:focus, select:focus, textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1); }
 
-        /* Error Message Guide */
-        #error-guide {
-            display: none; background: #fff1f2; border-left: 4px solid var(--danger);
-            padding: 16px; margin: 0 40px 20px; border-radius: 8px; color: #991b1b;
-            font-size: 14px; font-weight: 500;
+        /* Advanced Image Upload Section */
+        .upload-zone {
+            border: 2px dashed var(--border); border-radius: 1.5rem; padding: 2rem;
+            text-align: center; transition: all 0.3s; cursor: pointer; position: relative;
+            background: #fafafa;
         }
+        .upload-zone:hover { border-color: var(--primary); background: rgba(99, 102, 241, 0.02); }
+        .preview-circle {
+            width: 100px; height: 100px; border-radius: 2rem; margin: 0 auto 1rem;
+            background: var(--border); display: flex; align-items: center; justify-content: center;
+            overflow: hidden; font-size: 2rem; color: var(--secondary);
+        }
+        .preview-circle img { width: 100%; height: 100%; object-fit: cover; }
 
         /* Buttons */
         .btn {
-            padding: 14px 28px; border-radius: 14px; border: none; font-weight: 700;
-            cursor: pointer; transition: all 0.3s; font-size: 15px; display: inline-flex;
-            align-items: center; justify-content: center; gap: 10px;
+            padding: 0.9rem 2rem; border-radius: 1rem; border: none; font-weight: 700;
+            cursor: pointer; transition: all 0.3s; font-size: 1rem;
+            display: inline-flex; align-items: center; justify-content: center; gap: 0.75rem;
         }
-        .btn-primary { background: var(--primary); color: white; width: 100%; }
-        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3); }
-        .btn-outline { background: white; border: 1.5px solid var(--border); color: #1e293b; }
-        .btn-outline:hover { background: #f1f5f9; }
-        .btn-danger { background: #fee2e2; color: var(--danger); }
-        .btn-danger:hover { background: var(--danger); color: white; }
+        .btn-primary { background: var(--primary); color: var(--white); width: 100%; }
+        .btn-primary:hover { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3); }
+        .btn-secondary { background: var(--light-bg); color: var(--dark); border: 1.5px solid var(--border); }
+        .btn-secondary:hover { background: var(--border); }
+        .btn-danger { background: #fff1f2; color: var(--danger); }
+        .btn-danger:hover { background: var(--danger); color: var(--white); }
+
+        /* Notification Guide */
+        #error-banner {
+            display: none; background: #fff1f2; border-left: 5px solid var(--danger);
+            padding: 1rem; margin: 0 3rem 1rem; border-radius: 0.75rem; color: #991b1b;
+            font-size: 0.9rem; font-weight: 500; animation: shake 0.4s ease-in-out;
+        }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
 
         /* Profile View Styling */
-        .profile-header { text-align: center; margin-bottom: 30px; }
-        .avatar-box {
-            width: 120px; height: 120px; border-radius: 40px; margin: 0 auto 20px;
-            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 50px; color: white; box-shadow: 0 20px 25px -5px rgba(99, 102, 241, 0.2);
-            overflow: hidden;
-        }
-        .avatar-box img { width: 100%; height: 100%; object-fit: cover; }
+        .profile-hero { text-align: center; padding-bottom: 2rem; }
+        .profile-meta { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; margin-top: 1rem; }
+        .pill { background: var(--light-bg); padding: 0.5rem 1rem; border-radius: 2rem; font-size: 0.8rem; font-weight: 600; color: var(--secondary); border: 1px solid var(--border); }
 
-        .info-pill {
-            background: #f1f5f9; padding: 6px 12px; border-radius: 8px; font-size: 13px;
-            font-weight: 600; color: #475569; display: inline-block; margin: 4px;
-        }
-
-        /* Loader */
-        .loader { width: 18px; height: 18px; border: 2px solid white; border-top-color: transparent; border-radius: 50%; animation: spin 0.6s linear infinite; display: none; }
+        .loader { width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3); border-top: 3px solid white; border-radius: 50%; animation: spin 0.8s linear infinite; display: none; }
         @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
 <div class="app-card">
-    <div class="progress-track"><div id="progress-fill"></div></div>
+    <div class="progress-container"><div id="progress-fill"></div></div>
 
-    <div id="error-guide"></div>
+    <div id="error-banner"></div>
 
     <!-- STEP 1: CREATE ACCOUNT -->
-    <div id="step-1" class="step-container active">
-        <h1>Join SocialConnect</h1>
-        <p class="subtitle">Create your unique identifier to get started.</p>
-        <form id="createForm">
-            <div class="input-group">
-                <label><i class="fa-solid fa-at"></i> Username</label>
-                <input type="text" id="username" placeholder="e.g. alex_p" required>
+    <div id="step-1" class="section active">
+        <h1>Create Account</h1>
+        <p class="subtitle">Join thousands of creators worldwide.</p>
+        <form id="form-create">
+            <div class="field-group">
+                <label>Username</label>
+                <input type="text" id="reg-username" placeholder="alex_design" required minlength="3">
             </div>
-            <div class="input-group">
-                <label><i class="fa-solid fa-envelope"></i> Email Address</label>
-                <input type="email" id="email" placeholder="alex@example.com" required>
-            </div>
-            <div class="input-group">
-                <label><i class="fa-solid fa-phone"></i> Phone Number</label>
-                <input type="text" id="phoneNumber" placeholder="e.g. 1234567890">
+            <div class="grid">
+                <div class="field-group">
+                    <label>Email Address</label>
+                    <input type="email" id="reg-email" placeholder="alex@example.com" required>
+                </div>
+                <div class="field-group">
+                    <label>Phone Number</label>
+                    <input type="tel" id="reg-phone" placeholder="10-15 digits">
+                </div>
             </div>
             <button type="submit" class="btn btn-primary">
-                <span>Create My Account</span>
+                <span>Continue to Profile</span>
                 <div class="loader"></div>
             </button>
         </form>
     </div>
 
     <!-- STEP 2: PROFILE SETUP -->
-    <div id="step-2" class="step-container">
-        <h1>Setup Your Profile</h1>
-        <p class="subtitle">Personalize how others see you on the platform.</p>
-        <form id="setupForm">
-            <div class="form-grid">
-                <div class="input-group">
+    <div id="step-2" class="section">
+        <h1>Profile Details</h1>
+        <p class="subtitle">This info will be visible to other members.</p>
+        <form id="form-setup">
+            <div class="grid">
+                <!-- Image Upload Field -->
+                <div class="col-span-2">
+                    <label>Profile Picture</label>
+                    <div class="upload-zone" onclick="document.getElementById('fileInput').click()">
+                        <div class="preview-circle" id="image-preview"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+                        <p style="font-weight: 700; font-size: 0.9rem;">Click to upload image</p>
+                        <p class="subtitle" style="margin-bottom: 0;">JPG, PNG or GIF (Max 1MB)</p>
+                        <input type="file" id="fileInput" hidden accept="image/*">
+                    </div>
+                </div>
+
+                <div class="field-group">
                     <label>First Name</label>
-                    <input type="text" id="firstName" required>
+                    <input type="text" id="setup-fname" required>
                 </div>
-                <div class="input-group">
+                <div class="field-group">
                     <label>Last Name</label>
-                    <input type="text" id="lastName" required>
+                    <input type="text" id="setup-lname" required>
                 </div>
-                <div class="input-group">
+                <div class="field-group">
                     <label>Gender</label>
-                    <select id="gender">
+                    <select id="setup-gender">
                         <option value="MALE">Male</option>
                         <option value="FEMALE">Female</option>
                         <option value="OTHER">Other</option>
                     </select>
                 </div>
-                <div class="input-group">
+                <div class="field-group">
                     <label>Date of Birth</label>
-                    <input type="date" id="dateOfBirth">
+                    <input type="date" id="setup-dob">
                 </div>
-                <div class="input-group">
+                <div class="field-group">
                     <label>Country</label>
-                    <input type="text" id="country">
+                    <input type="text" id="setup-country" placeholder="e.g. USA">
                 </div>
-                <div class="input-group">
+                <div class="field-group">
+                    <label>State / Province</label>
+                    <input type="text" id="setup-state" placeholder="e.g. California">
+                </div>
+                <div class="field-group">
+                    <label>City</label>
+                    <input type="text" id="setup-city" placeholder="e.g. San Francisco">
+                </div>
+                <div class="field-group">
                     <label>Language</label>
-                    <input type="text" id="language" placeholder="English">
+                    <input type="text" id="setup-lang" placeholder="English">
                 </div>
-                <div class="input-group full-width">
-                    <label>Profile Image URL</label>
-                    <input type="url" id="profileImage" placeholder="https://image-url.com/photo.jpg">
-                </div>
-                <div class="input-group full-width">
-                    <label>About Bio</label>
-                    <textarea id="bio" rows="3" placeholder="Tell us about yourself..."></textarea>
+                <div class="col-span-2">
+                    <label>Bio</label>
+                    <textarea id="setup-bio" rows="3" placeholder="Tell us your story..."></textarea>
                 </div>
             </div>
             <button type="submit" class="btn btn-primary">
-                <span>Complete Profile</span>
+                <span>Complete Setup</span>
                 <div class="loader"></div>
             </button>
         </form>
     </div>
 
-    <!-- STEP 3: PROFILE VIEW -->
-    <div id="step-3" class="step-container">
-        <div class="profile-header">
-            <div class="avatar-box" id="view-avatar">
-                <i class="fa-solid fa-user"></i>
-            </div>
-            <h1 id="view-fullname">Full Name</h1>
-            <p style="color: var(--primary); font-weight: 700;" id="view-username-tag">@username</p>
-        </div>
-
-        <div style="background: white; border-radius: 20px; padding: 25px; border: 1.5px solid var(--border); margin-bottom: 30px;">
-            <div id="view-bio-box" style="margin-bottom: 20px; line-height: 1.6; color: #334155;"></div>
-            <div id="pills-container">
-                <!-- Location, Gender, etc will go here as pills -->
+    <!-- STEP 3: FINAL PROFILE VIEW -->
+    <div id="step-3" class="section">
+        <div class="profile-hero">
+            <div class="preview-circle" id="view-avatar" style="width: 130px; height: 130px; border-radius: 3rem; border: 4px solid var(--white); box-shadow: var(--shadow);"></div>
+            <h1 id="view-name">Alex Johnson</h1>
+            <p style="color: var(--primary); font-weight: 700; font-size: 1.1rem;" id="view-handle">@alex_j</p>
+            <div class="profile-meta" id="view-pills">
+                <!-- Dynamic Pills -->
             </div>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-            <button onclick="startApp()" class="btn btn-primary full-width" style="grid-column: span 2;">
-                <i class="fa-solid fa-rocket"></i> Let's Start
-            </button>
-            <button onclick="showUpdateUI()" class="btn btn-outline">
-                <i class="fa-solid fa-pen-to-square"></i> Update
-            </button>
-            <button onclick="handleDelete()" class="btn btn-danger">
-                <i class="fa-solid fa-trash"></i> Delete
-            </button>
+        <div style="background: var(--light-bg); padding: 1.5rem; border-radius: 1.25rem; margin-bottom: 2rem;">
+            <p id="view-bio" style="line-height: 1.6; color: var(--dark); font-weight: 500;"></p>
+        </div>
+
+        <div class="grid" style="grid-template-columns: 2fr 1fr 1fr;">
+            <button onclick="startApp()" class="btn btn-primary"><i class="fa-solid fa-rocket"></i> Let's Start</button>
+            <button onclick="showUpdate()" class="btn btn-secondary"><i class="fa-solid fa-user-pen"></i> Update</button>
+            <button onclick="confirmDelete()" class="btn btn-danger"><i class="fa-solid fa-trash-can"></i> Delete</button>
         </div>
     </div>
 </div>
 
 <script>
     let currentUserUuid = null;
+    let base64Image = "";
     const API_BASE = '/api/v1/users';
 
-    // Helper: UI Navigation
-    function showStep(step) {
-        document.querySelectorAll('.step-container').forEach(el => el.classList.remove('active'));
+    // UI State Logic
+    const toggleStep = (step) => {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.getElementById(`step-${step}`).classList.add('active');
-        document.getElementById('progress-fill').style.width = (step === 1 ? '33%' : step === 2 ? '66%' : '100%');
-        document.getElementById('error-guide').style.display = 'none';
-    }
+        document.getElementById('progress-fill').style.width = step === 1 ? '33%' : step === 2 ? '66%' : '100%';
+        document.getElementById('error-banner').style.display = 'none';
+    };
 
-    // Helper: Error Handling
-    function displayError(msg) {
-        const errorEl = document.getElementById('error-guide');
-        errorEl.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> ${msg}`;
-        errorEl.style.display = 'block';
-        window.scrollTo(0,0);
-    }
-
-    // Helper: Button Loading
-    function setBtnLoading(formId, isLoading) {
-        const btn = document.querySelector(`#${formId} button`);
+    const setBtnLoading = (step, isLoading) => {
+        const btn = document.querySelector(`#step-${step} button`);
         btn.disabled = isLoading;
-        btn.querySelector('span').style.display = isLoading ? 'none' : 'inline';
-        btn.querySelector('.loader').style.display = isLoading ? 'inline-block' : 'none';
-    }
+        btn.querySelector('span').style.display = isLoading ? 'none' : 'block';
+        btn.querySelector('.loader').style.display = isLoading ? 'block' : 'none';
+    };
 
-    // CREATE USER (Step 1)
-    document.getElementById('createForm').onsubmit = async (e) => {
+    const showError = (msg) => {
+        const banner = document.getElementById('error-banner');
+        banner.innerText = msg;
+        banner.style.display = 'block';
+        window.scrollTo(0,0);
+    };
+
+    // File Handling (Base64 Conversion)
+    document.getElementById('fileInput').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const fullBase64 = event.target.result;
+                base64Image = fullBase64.split(',')[1]; // Get raw base64 part
+                document.getElementById('image-preview').innerHTML = `<img src="${fullBase64}">`;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Step 1: Create Account
+    document.getElementById('form-create').onsubmit = async (e) => {
         e.preventDefault();
-        setBtnLoading('createForm', true);
+        setBtnLoading(1, true);
 
         const payload = {
-            username: document.getElementById('username').value,
-            email: document.getElementById('email').value,
-            phoneNumber: document.getElementById('phoneNumber').value
+            username: document.getElementById('reg-username').value,
+            email: document.getElementById('reg-email').value,
+            phoneNumber: document.getElementById('reg-phone').value
         };
 
         try {
@@ -276,31 +300,30 @@
                 body: JSON.stringify(payload)
             });
             const data = await res.json();
-
             if (res.ok) {
                 currentUserUuid = data.userUuid;
-                showStep(2);
-            } else {
-                displayError(data.message || "Email or Username already taken");
-            }
-        } catch (err) { displayError("Network error. Check server."); }
-        finally { setBtnLoading('createForm', false); }
+                toggleStep(2);
+            } else { showError(data.message || "Username or email already exists."); }
+        } catch (err) { showError("Server connection failed."); }
+        finally { setBtnLoading(1, false); }
     };
 
-    // SETUP PROFILE (Step 2)
-    document.getElementById('setupForm').onsubmit = async (e) => {
+    // Step 2: Setup Profile
+    document.getElementById('form-setup').onsubmit = async (e) => {
         e.preventDefault();
-        setBtnLoading('setupForm', true);
+        setBtnLoading(2, true);
 
         const payload = {
-            firstName: document.getElementById('firstName').value,
-            lastName: document.getElementById('lastName').value,
-            bio: document.getElementById('bio').value,
-            gender: document.getElementById('gender').value,
-            dateOfBirth: document.getElementById('dateOfBirth').value,
-            country: document.getElementById('country').value,
-            language: document.getElementById('language').value,
-            profileImage: document.getElementById('profileImage').value
+            firstName: document.getElementById('setup-fname').value,
+            lastName: document.getElementById('setup-lname').value,
+            bio: document.getElementById('setup-bio').value,
+            gender: document.getElementById('setup-gender').value,
+            dateOfBirth: document.getElementById('setup-dob').value,
+            country: document.getElementById('setup-country').value,
+            state: document.getElementById('setup-state').value,
+            city: document.getElementById('setup-city').value,
+            language: document.getElementById('setup-lang').value,
+            profileImage: base64Image
         };
 
         try {
@@ -310,56 +333,38 @@
                 body: JSON.stringify(payload)
             });
             const data = await res.json();
-
             if (res.ok) {
-                renderProfileView(data);
-                showStep(3);
-            } else {
-                displayError(data.message || "Failed to update profile details.");
-            }
-        } catch (err) { displayError("Network error."); }
-        finally { setBtnLoading('setupForm', false); }
+                renderProfile(data);
+                toggleStep(3);
+            } else { showError("Failed to save profile details."); }
+        } catch (err) { showError("Server error."); }
+        finally { setBtnLoading(2, false); }
     };
 
-    // RENDER FINAL VIEW
-    function renderProfileView(user) {
-        document.getElementById('view-fullname').innerText = `${user.firstName} ${user.lastName}`;
-        document.getElementById('view-username-tag').innerText = `@${user.username}`;
-        document.getElementById('view-bio-box').innerText = user.bio || "No bio available.";
+    const renderProfile = (user) => {
+        document.getElementById('view-name').innerText = `${user.firstName} ${user.lastName}`;
+        document.getElementById('view-handle').innerText = `@${user.username}`;
+        document.getElementById('view-bio').innerText = user.bio || "No bio set.";
 
-        const avatarBox = document.getElementById('view-avatar');
-        if(user.profileImage) {
-            avatarBox.innerHTML = `<img src="${user.profileImage}" alt="profile">`;
-        } else {
-            avatarBox.innerHTML = `<i class="fa-solid fa-user"></i>`;
-        }
+        const avatar = document.getElementById('view-avatar');
+        avatar.innerHTML = user.profileImage ? `<img src="data:image/png;base64,${user.profileImage}">` : `<i class="fa-solid fa-user"></i>`;
 
-        const pills = document.getElementById('pills-container');
+        const pills = document.getElementById('view-pills');
         pills.innerHTML = `
-            <span class="info-pill"><i class="fa-solid fa-envelope"></i> ${user.email}</span>
-            <span class="info-pill"><i class="fa-solid fa-venus-mars"></i> ${user.gender}</span>
-            <span class="info-pill"><i class="fa-solid fa-earth-americas"></i> ${user.country || 'N/A'}</span>
-            <span class="info-pill"><i class="fa-solid fa-language"></i> ${user.language || 'English'}</span>
+            <div class="pill"><i class="fa-solid fa-location-dot"></i> ${user.city || 'Somewhere'}</div>
+            <div class="pill"><i class="fa-solid fa-venus-mars"></i> ${user.gender}</div>
+            <div class="pill"><i class="fa-solid fa-envelope"></i> ${user.email}</div>
         `;
-    }
+    };
 
-    // ACTIONS (Update / Delete / Start)
-    function showUpdateUI() {
-        showStep(2); // In a real app, pre-fill data using currentUserUuid fetch
-    }
-
-    async function handleDelete() {
-        if(confirm("Permanently delete your profile? This cannot be undone.")) {
-            const res = await fetch(`${API_BASE}/${currentUserUuid}`, { method: 'DELETE' });
-            if(res.ok) {
-                alert("Account deleted.");
-                location.reload();
-            }
+    // Actions
+    function showUpdate() { toggleStep(2); }
+    function startApp() { alert("Welcome to the community!"); }
+    async function confirmDelete() {
+        if (confirm("Delete account permanently?")) {
+            await fetch(`${API_BASE}/${currentUserUuid}`, { method: 'DELETE' });
+            location.reload();
         }
-    }
-
-    function startApp() {
-        alert("Redirecting to your Social Feed...");
     }
 </script>
 </body>
