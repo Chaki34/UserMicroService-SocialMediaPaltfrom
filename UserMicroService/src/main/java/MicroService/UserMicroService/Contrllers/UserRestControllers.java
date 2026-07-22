@@ -18,7 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
-public class UserController {
+public class UserRestControllers {
 
     private final UserService userService;
 
@@ -100,5 +100,7 @@ public class UserController {
 
         return ResponseEntity.noContent().build();
     }
+
+
 
 }
